@@ -2,7 +2,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 import pandas as pd
 
-df = pd.read_csv('E:/pythonProject/机器学习/datas/credit-overdue.csv')
+df = pd.read_csv('./credit-overdue.csv')
 
 
 # plt.figure()
@@ -55,6 +55,7 @@ lr = 0.001  # 学习率
 num_iter = 10000  # 迭代次数
 # 模型训练
 L = Logistic_Regression(x, y, lr, num_iter)
+print(L)
 
 # plt.figure(figsize=(10, 6))
 # map_size = {0: 20, 1: 100}
@@ -77,34 +78,34 @@ L = Logistic_Regression(x, y, lr, num_iter)
 # plt.show()
 
 
-def Logistic_Regression(x, y, lr, num_iter):
-    intercept = np.ones((x.shape[0], 1))  # 初始化截距为 1
-    x = np.concatenate((intercept, x), axis=1)
-    w = np.zeros(x.shape[1])  # 初始化参数为 1
-
-    l_list = []  # 保存损失函数值
-    for i in range(num_iter):  # 梯度下降迭代
-        z = np.dot(x, w)  # 线性函数
-        h = sigmoid(z)  # sigmoid 函数
-
-        g = gradient(x, h, y)  # 计算梯度
-        w -= lr * g  # 通过学习率 lr 计算步长并执行梯度下降
-
-        z = np.dot(x, w)  # 更新参数到原线性函数中
-        h = sigmoid(z)  # 计算 sigmoid 函数值
-
-        l = loss(h, y)  # 计算损失函数值
-        l_list.append(l)
-    return l_list
-
-
-lr = 0.01  # 学习率
-num_iter = 30000  # 迭代次数
-l_y = Logistic_Regression(x, y, lr, num_iter)  # 训练
-
-# 绘图
-plt.figure(figsize=(10, 6))
-plt.plot([i for i in range(len(l_y))], l_y)
-plt.xlabel("Number of iterations")
-plt.ylabel("Loss function")
-plt.show()
+# def Logistic_Regression(x, y, lr, num_iter):
+#     intercept = np.ones((x.shape[0], 1))  # 初始化截距为 1
+#     x = np.concatenate((intercept, x), axis=1)
+#     w = np.zeros(x.shape[1])  # 初始化参数为 1
+#
+#     l_list = []  # 保存损失函数值
+#     for i in range(num_iter):  # 梯度下降迭代
+#         z = np.dot(x, w)  # 线性函数
+#         h = sigmoid(z)  # sigmoid 函数
+#
+#         g = gradient(x, h, y)  # 计算梯度
+#         w -= lr * g  # 通过学习率 lr 计算步长并执行梯度下降
+#
+#         z = np.dot(x, w)  # 更新参数到原线性函数中
+#         h = sigmoid(z)  # 计算 sigmoid 函数值
+#
+#         l = loss(h, y)  # 计算损失函数值
+#         l_list.append(l)
+#     return l_list
+#
+#
+# lr = 0.01  # 学习率
+# num_iter = 30000  # 迭代次数
+# l_y = Logistic_Regression(x, y, lr, num_iter)  # 训练
+#
+# # 绘图
+# plt.figure(figsize=(10, 6))
+# plt.plot([i for i in range(len(l_y))], l_y)
+# plt.xlabel("Number of iterations")
+# plt.ylabel("Loss function")
+# plt.show()

@@ -39,7 +39,6 @@ X = pdData.iloc[:, :3].values
 Y = pdData.iloc[:, 3].values
 theta = np.zeros([1, 3])
 
-
 import time
 import numpy.random
 
@@ -99,31 +98,14 @@ def descent(data, theta, batchSize, stopType, thresh, alpha):
 def runExpe(data, theta, batchSize, stopType, thresh, alpha):
     # import pdb; pdb.set_trace();
     theta, iter, costs, grad, dur = descent(data, theta, batchSize, stopType, thresh, alpha)
-    name = "Original" if (data[:, 1] > 2).sum() > 1 else "Scaled"
-    name += " data - learning rate: {} - ".format(alpha)
-    if batchSize == n:
-        strDescType = "Gradient"
-    elif batchSize == 1:
-        strDescType = "Stochastic"
-    else:
-        strDescType = "Mini-batch ({})".format(batchSize)
-    name += strDescType + " descent - Stop: "
-    if stopType == STOP_ITER:
-        strStop = "{} iterations".format(thresh)
-    elif stopType == STOP_COST:
-        strStop = "costs change < {}".format(thresh)
-    else:
-        strStop = "gradient norm < {}".format(thresh)
-    name += strStop
-    print("***{}\nTheta: {} - Iter: {} - Last cost: {:03.2f} - Duration: {:03.2f}s".format(
-        name, theta, iter, costs[-1], dur))
-    fig, ax = plt.subplots(figsize=(12, 4))
-    ax.plot(np.arange(len(costs)), costs, 'r')
-    ax.set_xlabel('Iterations')
-    ax.set_ylabel('Cost')
-    ax.set_title(name.upper() + ' - Error vs. Iteration')
-    return theta
+
+    return costs
 
 
 n = 100
-runExpe(pdData, theta, n, STOP_ITER, thresh=5000, alpha=0.000001)
+costs = runExpe(pdData, theta, n, STOP_ITER, thresh=5000, alpha=0.000001)
+print(costs)
+
+#设定阈值
+def predict(X, theta):
+    return [1 if x >= 0.5 else 0 for x in model(X, theta)]

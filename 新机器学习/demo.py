@@ -27,7 +27,7 @@ def cost(X, y, theta):
 def gradient(X, y, theta):
     grad = np.zeros(theta.shape)
     data = model(X, theta)
-    error = (data - y)
+    error = (data - y)[0]
     for j in range(len(theta.ravel())):  # for each parmeter
         term = np.multiply(error, X[:, j])
         grad[0, j] = np.sum(term) / len(X)
@@ -44,6 +44,7 @@ import time
 import numpy.random
 
 # 洗牌
+value = 0
 STOP_ITER = 0
 STOP_COST = 1
 STOP_GRAD = 2
@@ -99,29 +100,6 @@ def descent(data, theta, batchSize, stopType, thresh, alpha):
 def runExpe(data, theta, batchSize, stopType, thresh, alpha):
     # import pdb; pdb.set_trace();
     theta, iter, costs, grad, dur = descent(data, theta, batchSize, stopType, thresh, alpha)
-    name = "Original" if (data[:, 1] > 2).sum() > 1 else "Scaled"
-    name += " data - learning rate: {} - ".format(alpha)
-    if batchSize == n:
-        strDescType = "Gradient"
-    elif batchSize == 1:
-        strDescType = "Stochastic"
-    else:
-        strDescType = "Mini-batch ({})".format(batchSize)
-    name += strDescType + " descent - Stop: "
-    if stopType == STOP_ITER:
-        strStop = "{} iterations".format(thresh)
-    elif stopType == STOP_COST:
-        strStop = "costs change < {}".format(thresh)
-    else:
-        strStop = "gradient norm < {}".format(thresh)
-    name += strStop
-    print("***{}\nTheta: {} - Iter: {} - Last cost: {:03.2f} - Duration: {:03.2f}s".format(
-        name, theta, iter, costs[-1], dur))
-    fig, ax = plt.subplots(figsize=(12, 4))
-    ax.plot(np.arange(len(costs)), costs, 'r')
-    ax.set_xlabel('Iterations')
-    ax.set_ylabel('Cost')
-    ax.set_title(name.upper() + ' - Error vs. Iteration')
     return theta
 
 

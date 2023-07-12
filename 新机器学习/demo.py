@@ -1,107 +1,37 @@
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.preprocessing import StandardScaler
 
+data = pd.read_csv("./data/creditcard.csv")
+data1 = data['Amount'].values.reshape(-1, 1)
+data['normAmount'] = StandardScaler().fit_transform(data1)
+data = data.drop(['Time', 'Amount'], axis=1)
+print(data)
+X = data.loc[:, data.columns != 'Class']
+y = data.loc[:, data.columns == 'Class']
 
-def sigmoid(z):
-    data = 1 / (1 + np.exp(-z))
-    return data
+number_records_fraud = len(data[data.Class == 1])  # 492
+fraud_indices = np.array(data[data.Class == 1].index)
 
+normal_indices = data[data.Class == 0].index
 
-def model(X, theta):
-    data = sigmoid(np.dot(X, theta.T))
-    return data
+# 从 normal_indices 中 取 number_records_fraud(492) 个 数据
+random_normal_indices = np.random.choice(normal_indices, number_records_fraud, replace=False)
+random_normal_indices = np.array(random_normal_indices)
 
+# Appending the 2 indices
+under_sample_indices = np.concatenate([fraud_indices, random_normal_indices])
 
-pdData = pd.read_csv('./data/LogiReg_data.txt', header=None, names=['Exma1', 'Exma2', 'Admitted'])
+# Under sample dataset
+under_sample_data = data.iloc[under_sample_indices, :]
 
-pdData.insert(0, 'Ones', 1)
+X_undersample = under_sample_data.loc[:, under_sample_data.columns != 'Class']
+y_undersample = under_sample_data.loc[:, under_sample_data.columns == 'Class']
 
-
-def cost(X, y, theta):
-    left = np.multiply(-y, np.log(model(X, theta)))
-    right = np.multiply(1 - y, np.log(1 - model(X, theta)))
-    return np.sum(left - right) / (len(X))
-
-
-def gradient(X, y, theta):
-    grad = np.zeros(theta.shape)
-    data = model(X, theta)
-    error = (data - y)[0]
-    for j in range(len(theta.ravel())):  # for each parmeter
-        term = np.multiply(error, X[:, j])
-        grad[0, j] = np.sum(term) / len(X)
-
-    return grad
-
-
-X = pdData.iloc[:, :3].values
-Y = pdData.iloc[:, 3].values
-theta = np.zeros([1, 3])
-
-
-import time
-import numpy.random
-
-# 洗牌
-value = 0
-STOP_ITER = 0
-STOP_COST = 1
-STOP_GRAD = 2
-
-
-def stopCriterion(type, value, threshold):
-    # 设定三种不同的停止策略
-    if type == STOP_ITER:
-        return value > threshold
-    elif type == STOP_COST:
-        return abs(value[-1] - value[-2]) < threshold
-    elif type == STOP_GRAD:
-        return np.linalg.norm(value) < threshold
-
-
-def shuffleData(data):
-    X = data.iloc[:, :3].values
-    y = data.iloc[:, 3].values
-    return X, y
-
-
-def descent(data, theta, batchSize, stopType, thresh, alpha):
-    # 梯度下降求解
-
-    init_time = time.time()
-    i = 0  # 迭代次数
-    k = 0  # batch
-    X, y = shuffleData(data)
-    grad = np.zeros(theta.shape)  # 计算的梯度
-    costs = [cost(X, y, theta)]  # 损失值
-
-    while True:
-        grad = gradient(X[k:k + batchSize], y[k:k + batchSize], theta)
-        k += batchSize  # 取batch数量个数据
-        if k >= n:
-            k = 0
-            X, y = shuffleData(data)  # 重新洗牌
-        theta = theta - alpha * grad  # 参数更新
-        costs.append(cost(X, y, theta))  # 计算新的损失
-        i += 1
-
-        if stopType == STOP_ITER:
-            value = i
-        elif stopType == STOP_COST:
-            value = costs
-        elif stopType == STOP_GRAD:
-            value = grad
-        if stopCriterion(stopType, value, thresh): break
-
-    return theta, i - 1, costs, grad, time.time() - init_time
-
-
-def runExpe(data, theta, batchSize, stopType, thresh, alpha):
-    # import pdb; pdb.set_trace();
-    theta, iter, costs, grad, dur = descent(data, theta, batchSize, stopType, thresh, alpha)
-    return theta
-
-
-n = 100
-runExpe(pdData, theta, n, STOP_ITER, thresh=5000, alpha=0.000001)
+# Showing ratio
+print("Percentage of normal transactions: ",
+      len(under_sample_data[under_sample_data.Class == 0]) / len(under_sample_data))
+print("Percentage of fraud transactions: ",
+      len(under_sample_data[under_sample_data.Class == 1]) / len(under_sample_data))
+print("Total number of transactions in resampled data: ", len(under_sample_data))

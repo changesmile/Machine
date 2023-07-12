@@ -11,11 +11,11 @@ def printing_Kfold_scores(x_train_data, y_train_data):
     # 划分n_splits个互斥子集，每次用其中一个子集当作验证集
     # shuffle = False则不会对传入的训练集打乱，是按顺序进行划分的
     fold = KFold(n_splits=5, shuffle=False)
-    fold.get_n_splits(x_train_data)
+    # fold.get_n_splits(x_train_data)
 
     # Different C parameters
     c_param_range = [0.01, 0.1, 1, 10, 100]
-
+    # 创造一个二维数组，用于记录不同 c_param_range 下的均值
     results_table = pd.DataFrame(index=range(len(c_param_range), 2), columns=['C_parameter', 'Mean recall score'])
     results_table['C_parameter'] = c_param_range
 
@@ -46,7 +46,7 @@ def printing_Kfold_scores(x_train_data, y_train_data):
             print('Iteration ', iteration, ': recall score = ', recall_acc)
 
         # The mean value of those recall scores is the metric we want to save and get hold of.
-        results_table.ix[j, 'Mean recall score'] = np.mean(recall_accs)
+        results_table.loc[j, 'Mean recall score'] = np.mean(recall_accs)
         j += 1
         print('')
         print('Mean recall score ', np.mean(recall_accs))

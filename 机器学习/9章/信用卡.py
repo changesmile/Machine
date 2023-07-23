@@ -38,7 +38,7 @@ print('  权重为：', weights, '\n  截距为：', bias)
 print("Step4:compute the accuracy...")
 
 # 使用测试集对模型进行验证
-acc = clf.score(x_test, y_test)
+acc = clf.result(x_test, y_test)
 print('  精确度：%.2f' % (acc * 100.0))
 
 # 绘制两类样本散点图

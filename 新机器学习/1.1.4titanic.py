@@ -1,5 +1,5 @@
 import pandas  # ipython notebook
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.model_selection import KFold, cross_val_score, train_test_split
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
@@ -52,10 +52,7 @@ predictors = ["Pclass", "Sex", "Age", "SibSp", "Parch", "Fare", "Embarked"]
 # print(scores.mean())
 
 x_train, x_test, y_train, y_test = train_test_split(titanic[predictors], titanic['Survived'],test_size=0.3 , random_state=0)
-alg = LinearRegression()
-alg.fit(x_train, y_train)
-score = alg.predict(x_test)
-score[score > .5] = 1
-score[score <= .5] = 0
-accuracy = sum(score[score == titanic["Survived"]]) / len(score)
-print(accuracy)
+model = LogisticRegression()
+model.fit(x_train, y_train)
+score = model.score(x_test, y_test)
+print(score)

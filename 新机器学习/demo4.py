@@ -1,45 +1,36 @@
-from matplotlib import pyplot as plt
+# conding :utf-8
+from sklearn.linear_model import LogisticRegression
 import numpy as np
-import pandas as pd
 
+x_train = np.array([[1, 2, 3],
+                    [1, 3, 4],
+                    [2, 1, 2],
+                    [4, 5, 6],
+                    [3, 5, 3],
+                    [1, 7, 2]])
 
-def sigmoid(z):
-    data = 1 / (1 + np.exp(-z))
-    return data
+y_train = np.array([3, 3, 3, 2, 2, 2])
 
+x_test = np.array([[2, 2, 2],
+                   [3, 2, 6],
+                   [1, 7, 4]])
 
-def model(X, W):
-    return np.dot(X, W)
+clf = LogisticRegression()
+clf.fit(x_train, y_train)
 
+# 返回预测标签  
+print(clf.predict(x_test))
 
-def loss(h, y):
-    data = -y * np.log(h) - (1 - y) * np.log(1 - h)
-    return data.mean()
+# 返回预测属于某标签的概率  
+print(clf.predict_proba(x_test))
 
-
-def gradient(x, h, y):
-    data = np.dot(x.T, (h - y)) / y.shape[0]
-    return data
-
-
-def Logistic_Regression(x, y, lr, num_iter):
-    n, m = x.shape
-    intercept = np.ones((n, 1))
-    x = np.concatenate((intercept, x), axis=1)
-    w = np.zeros(m + 1)
-    l =0
-    for i in range(num_iter):
-        h = sigmoid(model(x, w))
-        g = gradient(x, h, y)
-        l = loss(h, y)
-        w = w - lr * g
-
-    return l, w
-
-
-df = pd.read_csv('./data/credit-overdue.csv')
-x = df[['debt', 'income']].values
-y = df['overdue'].values
-lr = 0.001
-num_iter = 10000
-Logistic_Regression(x, y, lr, num_iter)
+# [2 3 2]  
+# [[0.56651809 0.43348191]  
+#  [0.15598162 0.84401838]  
+#  [0.86852502 0.13147498]]  
+# 分析结果：  
+# 预测[2,2,2]的标签是2的概率为0.56651809，3的概率为0.43348191  
+#  
+# 预测[3,2,6]的标签是2的概率为0.15598162，3的概率为0.84401838  
+#  
+# 预测[1,7,4]的标签是2的概率为0.86852502，3的概率为0.13147498  

@@ -12,7 +12,7 @@ print('coef:\n', clf.coef_)
 print('intercept:\n', clf.intercept_)
 
 print('predict first two:\n', clf.predict(X_train[:2, :]))
-print('classification score:\n', clf.score(X_train, y_train))
+print('classification score:\n', clf.result(X_train, y_train))
 
 predict_y = clf.predict(X_test)
 print('classfication report:\n ', metrics.classification_report(y_test, predict_y))

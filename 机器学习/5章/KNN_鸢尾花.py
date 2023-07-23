@@ -42,6 +42,6 @@ print('预测结果：   ', result)
 # print(x_test)
 # print()
 # print(y_test)
-print('预测精确度：', knn.score(x_test, y_test))
+print('预测精确度：', knn.result(x_test, y_test))
 
 

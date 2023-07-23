@@ -16,7 +16,7 @@ print('数据大小：', fruit.shape)
 print('测试大小', test_x.shape)
 print('真实结果：', test_y)
 print('测试结果：', result)
-score = knn.score(test_x, test_y)
+score = knn.result(test_x, test_y)
 print('精确率：', score)
 
 

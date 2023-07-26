@@ -1,24 +1,24 @@
-import numpy as np
-import pandas as pd
+#【例3.76】使用停用词，对文本进行分词。
+import jieba
+import jieba.analyse
 
+#stop-words list
+def stopwordslist(filepath):
+    f=open(filepath,'r',encoding='utf-8')
+    txt=f.readlines()
+    stopwords=[]
+    for line in txt:
+        stopwords.append(line.strip())
+    return stopwords
 
-def batch_gradient_descent(X, y, alpha, num_iters):
-    m, n = X.shape
-    theta = np.zeros((n, 1))
-    for i in range(num_iters):
-        h = np.dot(X, theta)
-        loss = h - y
-        gradient = np.dot(X.T, loss) / m
-        theta = theta - alpha * gradient
-    return theta
-
-
-pdData = pd.read_csv('./data/LogiReg_data.txt', header=None, names=['Exma1', 'Exma2', 'Admitted'])
-
-pdData.insert(0, 'Ones', 1)
-X = pdData.iloc[:, :3].values
-Y = pdData.iloc[:, 3].values
-n = 100
-alpha = 0.000001
-loss = batch_gradient_descent(X, Y, alpha, n)
-print(loss)
+inputs=open('news.txt','rb')
+stopwords=stopwordslist('ch-stop_words.txt')
+outstr=''
+for line in inputs: 
+    sentence_seged=jieba.cut(line.strip())    
+    for word in sentence_seged:        
+        if word not in stopwords:
+            if word!='\t':
+                outstr+=' '+word
+                outstr+=''
+print(outstr)
